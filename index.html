@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Kovela Jewellers</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #008000;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            width: 320px;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #555;
+        }
+
+        #number {
+            font-size: 60px;
+            font-weight: bold;
+            margin: 25px 0;
+        }
+
+        #qrCode {
+            width: 250px;
+            height: 250px;
+            display: none;
+            margin: 20px auto;
+        }
+
+        button {
+            background: #D4AF37;
+            color: black;
+            border: none;
+            padding: 14px 25px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #B59410;
+        }
+
+        button:disabled {
+            background: #999;
+            color: white;
+            cursor: not-allowed;
+            opacity: 0.8;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="container">
+     <img src="images/kovela_jewels.jpg"
+     alt="Kovela Jewellers Logo"
+     class="logo">
+
+
+        <h1>Kovela Jewellers</h1>
+
+        <p class="description">
+            A Special Offer For You 
+        </p>
+
+        <div id="number">?</div>
+
+        <img id="qrCode" alt="QR Code">
+
+        <button id="generateButton" onclick="generateQR()">
+            MY OFFER
+        </button>
+
+    </div>
+
+
+    <script>
+
+        const numberElement =
+            document.getElementById("number");
+
+        const qrCode =
+            document.getElementById("qrCode");
+
+        const generateButton =
+            document.getElementById("generateButton");
+
+
+        // Check if this browser already generated a number
+
+        const savedNumber =
+            localStorage.getItem("kovelaGeneratedNumber");
+
+
+        // If a number already exists
+
+        if (savedNumber !== null) {
+
+            showQR(savedNumber);
+
+            generateButton.disabled = true;
+
+            generateButton.textContent =
+                "QR Already Generated";
+
+        }
+
+
+        function generateQR() {
+
+            // Prevent generating again
+
+            if (
+                localStorage.getItem("kovelaGeneratedNumber")
+                !== null
+            ) {
+
+                return;
+
+            }
+
+
+            // Generate random number from 0 to 19
+
+            const randomNumber =
+                Math.floor(Math.random() * 16) + 5;
+
+
+            // Save number in this browser
+
+            localStorage.setItem(
+                "kovelaGeneratedNumber",
+                randomNumber
+            );
+
+
+            // Show QR
+
+            showQR(randomNumber);
+
+
+            // Disable button
+
+            generateButton.disabled = true;
+
+            generateButton.textContent =
+                "QR Already Generated";
+
+        }
+
+
+        function showQR(number) {
+
+            // Show number
+
+            numberElement.textContent = number + "% on VA";
+
+
+            // Create QR code
+
+            const qrUrl =
+                "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data="
+                + encodeURIComponent(number);
+
+
+            // Show QR
+
+            qrCode.src = qrUrl;
+
+            qrCode.style.display = "block";
+
+        }
+
+    </script>
+
+</body>
+
+</html>
